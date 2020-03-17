@@ -1,0 +1,13 @@
+
+
+(*PROYECTO DE CIRCULACION DEL FLUJO DE AGUA A TRAVES DE TRES TANQUES*)
+
+========================================================================
+
+
+(1) Creacion del bloque funcional FB_BASIC sobre los que se programaran
+los tres Modulos de Equipamiento TP (Tanque Principal) DS (Deposito Superior)
+DI (Deposito Inferior).
+
+(2) Creacion del Data Type, o Estructura de datos que resume el estado del
+Modulo de Equipamiento.
