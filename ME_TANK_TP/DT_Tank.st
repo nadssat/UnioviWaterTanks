@@ -3,7 +3,7 @@
 TYPE DT_TANK
 STRUCT
 
-Identifier : real; (**)
+Identifier : REAL; (**)
 (*Entradas y salidas fisicas del tanque*)
 
 // Temp_TP := REAL; // Temperatura instantanea del bloque
@@ -17,9 +17,10 @@ V2 : BOOL; // Accionamiento sobre la valvula V2, conecta TP -> DI
 V3 : bool; // Accionamiento sobre la valvula V3, conecta TP -> TP // TP -> DS
 V5 : BOOL; // Accionamiento sobre la valvula ternaria V3
 
+
 (*Parametros de funcionamiento*)
-
-
+Velocity : REAL; (*Velocidad de funcionamiento de la bomba*)
+Power : REAL;
 (*Parametros de supervisión*)
 
 (*Estados de funcionamiento*)

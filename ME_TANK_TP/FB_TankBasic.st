@@ -11,13 +11,8 @@ Enable : BOOL; (*Condicion de funcionamiento en el nivel mas exterior del bloque
 Permiso : BOOL; (*Condicion de funcionamiento local*)
 Iniciar : bool; (*Condicion de inicio del proceso*)
 Finalizar : bool; (*Condicion de finalizacion del proceso*)
-TDone : Real; (*Tiempo de establecimiento de la señal de finalizacion)
-//DI_DS := Bool; (*Seleccion del deposito de Origen/Destino*)
+TDone : Real; (*Tiempo de establecimiento de la señal de finalizacion*)
 END_VAR
-
-//var_IN_OUT
-//Estado := int; (*Indica el estado anterior del modulo de equipamiento*)
-//END_VAR
 
 VAR_OUTPUT
 MSG : STRING; (*Muestra mensajes de informacion relevante para el sistema*)
@@ -68,9 +63,4 @@ END_VAR
     if Done THEN
       MSG := 'Finalizado';
     END_IF
-
-
-    END_IF
-
-
   END_IF
