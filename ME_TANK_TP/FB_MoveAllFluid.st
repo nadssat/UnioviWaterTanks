@@ -3,7 +3,6 @@ FUNCTION_BLOCK FB_MoveAllFluid
 (*BLOQUE FUNCIONAL DEL TANQUE: MOVE ALL FLUID*)
 (*=================================================================================*)
 
-
 (*DESCRIPCIÓN: Bloque funcional que a partir de dos tanques se encarga de comprobar
 que se cumplen las restricciones locales de funcionamiento, es decir,
 que el tanque que cede o GuestTank tenga fluido y que el tanque que recive o
@@ -50,10 +49,10 @@ END_VAR
 
 (*CODIGO DE FUNCIONAMIENTO*)
 (*=================================================================================*)
-EmptyAllTank (Enable := Enable,
-			  Permiso := GuestTank.Maximo AND NOT HostTank.Maximo,
+EmptyAllTank (Enable := TRUE,
+			  Permiso := GuestTank.Maximo AND NOT (HostTank.Maximo),
               Iniciar := Iniciar,
-			  Finalizar := NOT GuestTank.Minimo OR HostTank.Minimo,
+			  Finalizar := (NOT (GuestTank.Minimo) OR HostTank.Minimo OR NOT (Enable)),
               TDone := TDone);
 
 
@@ -97,7 +96,6 @@ IF GuestTank.Identifier = 0 THEN
       OUT_Comand_V5_2 := FALSE;
       OUT_Power_B2 := 0.0; // En este caso la Bomba no funciona
 	END_IF;
-
 END_IF;
 
 (*Conexiones del TANQUE PRINCIPAL*)
@@ -112,7 +110,7 @@ IF GuestTank.Identifier = 1 THEN
     OUT_Comand_V4 := FALSE;
     OUT_Comand_V5_1 := FALSE;
     OUT_Comand_V5_2 := EmptyAllTank.OUT_Comand;
-    OUT_Power_B2 := HostTank.Power; // Fijamos la potencia de la bomba segun HostTank
+    OUT_Power_B2 := HostTank.Power * EmptyAllTank.OUT_Power; // Fijamos la potencia de la bomba segun HostTank
 	END_IF;
 	IF HostTank.Identifier = 2 THEN
     (*Conexion Tanque Principal con Deposito Inferior*)
@@ -124,7 +122,7 @@ IF GuestTank.Identifier = 1 THEN
     OUT_Comand_V5_1 := FALSE;
     OUT_Comand_V5_2 := FALSE;
     OUT_Power_B2 := 0.0; // En este caso la Bomba no funciona
-	END_IF;
+    END_IF;
 END_IF;
 
 (*Conexiones del DEPOSITO INFERIOR*)
@@ -139,7 +137,7 @@ IF GuestTank.Identifier = 2 THEN
     OUT_Comand_V4 := EmptyAllTank.OUT_Comand;
     OUT_Comand_V5_1 := FALSE;
     OUT_Comand_V5_2 := EmptyAllTank.OUT_Comand;
-    OUT_Power_B2 := HostTank.Power; // Fijamos la potencia de la bomba segun HostTank
+    OUT_Power_B2 := HostTank.Power * EmptyAllTank.OUT_Power; // Fijamos la potencia de la bomba segun HostTank
 	END_IF
 	IF HostTank.Identifier = 1 THEN
     (*Conexion Deposito Inferior con Tanque Principal*)
@@ -150,6 +148,18 @@ IF GuestTank.Identifier = 2 THEN
     OUT_Comand_V4 := EmptyAllTank.OUT_Comand;
     OUT_Comand_V5_1 := EmptyAllTank.OUT_Comand;
     OUT_Comand_V5_2 := FALSE;
-    OUT_Power_B2 := HostTank.Power; // Fijamos la potencia de la bomba segun HostTank
+    OUT_Power_B2 := HostTank.Power * EmptyAllTank.OUT_Power; // Fijamos la potencia de la bomba segun HostTank
 	END_IF;
 END_IF;
+
+(*MENSAJES DE ERROR*)
+(********************************************************************************************)
+IF EmptyAllTank.Finalizar THEN
+	MSG := 'Proceso finalizado';
+END_IF
+IF NOT Enable THEN
+	MSG := 'STOP';
+END_IF
+IF ( GuestTank.Identifier > 2) OR (  HostTank.Identifier > 2 ) THEN
+	 MSG := 'Identificadores no reconocidos';
+END_IF
