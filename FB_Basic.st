@@ -1,6 +1,4 @@
-
-
-BLOCK_FUNCTION FB_BASIC
+FUNCTION_BLOCK FB_BASIC
 // VARIABLES DE ENTRADA DEL BLOQUE FUNCIONAL
 VAR_INPUT
   Enable: Bool; // Permite la funcionalidad del bloque
@@ -53,12 +51,11 @@ var
     y ET(Elapsed time of the pulse o tiempo de duracion del pulso)*)
 END_VAR
 
-// CODIGO DEL BLOQUE funcional
 
   IF Enable THEN // Activacion general del bloque
 
-    MSG := '    '; (*Mensaje*)
-    RS_Act (SET1:= Iniciar AND Permiso, RESET1 := Finalizar);
+    MSG := '    '; (*Mensaje*);
+    RS_Act (Set := Iniciar AND Permiso, Reset1 := Finalizar);
     (*Creamos un bloque RS con activacion mediante la acctivacion sincronizada
     de Iniciar y Permiso. El bloque se resetea mediante finalizar*)
 
@@ -74,14 +71,14 @@ END_VAR
       OUT_Power := 0.0; // Si Actuador= 0 -> Power = 0
     END_IF
 
-    FT_Act (CLK := Actuador)
+    FT_Act (CLK := Actuador);
     (*Si Actuador = 0 -> NO hay FLANCO; Si Actuador = 1 -> hay FLANCO*)
 
-    TP_Done_Act (IN:= FT_Act.Q ,PT := TO_TIME(T_Done))
+    TP_Done_Act (IN:= FT_Act.Q ,PT := TO_TIME(TDone));
     (*Con el flanco generado anteriormente activamos un temporizador
     que tiene por salida 1 hasta que se cumpla el tiempo T_Done*)
 
-    Done:= TP_Done_Act.Q
+    Done:= TP_Done_Act.Q;
     (*Done va a valer 1 durante T_Done, hasta que se acabe
     el temporizador*)
 

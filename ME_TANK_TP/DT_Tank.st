@@ -1,6 +1,5 @@
 
-
-TYPE DT_TANK
+TYPE DT_TANK :
 STRUCT
 
 Identifier : REAL; (**)
@@ -9,8 +8,8 @@ Identifier : REAL; (**)
 // Temp_TP := REAL; // Temperatura instantanea del bloque
 Nivel : REAL; // Nivel instantaneo del bloque
 
-Max : BOOL; // Sensor de nivel maximo; Normalmente abierto
-Min :BOOL; // Sensor de nivel minimo; Normalmente cerradp
+Maximo : BOOL; // Sensor de nivel maximo; Normalmente abierto
+Minimo :BOOL; // Sensor de nivel minimo; Normalmente cerradp
 
 V1 : BOOL; // Accionamiento sobre la valvula V1, conecta DS -> TP
 V2 : BOOL; // Accionamiento sobre la valvula V2, conecta TP -> DI
@@ -24,10 +23,7 @@ Power : REAL;
 (*Parametros de supervisión*)
 
 (*Estados de funcionamiento*)
-Llenado : bool;
-Vaciado : bool;
-Vacio : bool;
-LLeno : bool;
+State : STRING;
 
 END_STRUCT
 END_TYPE

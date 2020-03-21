@@ -1,17 +1,11 @@
-
-
-(**)
-
-(*BLOQUE FUNCIONAL PARA EL DESARROLLO DE ACCIONES DEL MODULO DE EQUIPAMIENTO TANQUE*)
-(*=================================================================================*)
-
+FUNCTION_BLOCK FB_TankBasic
 (*DEFINICIÓN DE LAS VARIABLES*)
 VAR_INPUT
 Enable : BOOL; (*Condicion de funcionamiento en el nivel mas exterior del bloque*)
 Permiso : BOOL; (*Condicion de funcionamiento local*)
 Iniciar : bool; (*Condicion de inicio del proceso*)
 Finalizar : bool; (*Condicion de finalizacion del proceso*)
-TDone : Real; (*Tiempo de establecimiento de la señal de finalizacion*)
+TDone : REAL; (*Tiempo de establecimiento de la señal de finalizacion*)
 END_VAR
 
 VAR_OUTPUT
@@ -21,27 +15,27 @@ OUT_Comand : Bool; (*Gobierna el actuador en los estados de ON/OFF*)
 Done : bool; (*Señal que indica cuando ha finalizado la accion*)
 END_VAR
 
-var
+VAR
 RS_ON_OFF : RS; (*Bloque RS*)
 F_EdgeDetection : F_TRIG; (*Falling Edge Detection*)
-Fin : TP (*Pulse Timer, donde IN es la activacion y PT la duracion del pulso*)
+Fin : TP; (*Pulse Timer, donde IN es la activacion y PT la duracion del pulso*)
+Actuador : BOOL;
 END_VAR
-
 
 (*CODIGO DE FUNCIONAMIENTO*)
 
   IF Enable THEN
 
-    MSG := '    '; (*Mensaje*)
-    RS_ON_OFF (SET := Iniciar AND Permiso, RESET := Finalizar)
+    MSG := 'En espera'; (*Mensaje*)
+    RS_ON_OFF (Set := Iniciar AND Permiso, Reset1 := Finalizar);
 
-    Actuador := RS_Act.Q1 AND Permiso;
+    Actuador := RS_ON_OFF.Q1 AND Permiso;
 
     if Actuador THEN
 
       MSG:= 'Actuador activado'; // Indicamos que el bloque funciona
       OUT_Comand := True; (*Encendemos el actuador*)
-      OUT_Power := SP_Power ; // Fijamos la potencia de salida
+      OUT_Power := 10.0 ; // Fijamos la potencia de salida
 
     else
         OUT_Comand := False; (*Actuador apagado*)
@@ -63,4 +57,5 @@ END_VAR
     if Done THEN
       MSG := 'Finalizado';
     END_IF
-  END_IF
+
+END_IF
